@@ -98,7 +98,7 @@ def build() -> dict[str, pd.DataFrame]:
 
 def main():
     tables = build()
-    print("\n=== CSV 側の件数と合計（SSMS の 02_check_stg.sql と比べる）===")
+    print("\n=== CSV 側の件数と合計（SSMS の 09_check_stg.sql と比べる）===")
     for name, df in tables.items():
         col = "views" if "views" in df.columns else "subscribers"
         print(f"{name:28s} rows={len(df):5d}  {col}_sum={int(df[col].sum())}")
