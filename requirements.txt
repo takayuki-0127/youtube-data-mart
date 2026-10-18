@@ -1,0 +1,6 @@
+pandas
+sqlalchemy
+pyodbc
+python-dotenv
+statsmodels
+scikit-learn
