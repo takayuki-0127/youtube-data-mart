@@ -1,0 +1,221 @@
+{
+  "name": "YouTube data mart",
+  "dataColors": [
+    "#2F6DB5",
+    "#E8743B",
+    "#9AA3AE",
+    "#19A979",
+    "#945ECF",
+    "#13A4B4",
+    "#D64550",
+    "#5B6770"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#1F2933",
+  "tableAccent": "#2F6DB5",
+  "good": "#19A979",
+  "bad": "#D64550",
+  "neutral": "#9AA3AE",
+  "textClasses": {
+    "title": {
+      "fontFace": "Yu Gothic UI Semibold",
+      "fontSize": 18,
+      "color": "#1F2933"
+    },
+    "header": {
+      "fontFace": "Yu Gothic UI Semibold",
+      "fontSize": 14,
+      "color": "#1F2933"
+    },
+    "label": {
+      "fontFace": "Yu Gothic UI",
+      "fontSize": 13,
+      "color": "#3E4C59"
+    },
+    "callout": {
+      "fontFace": "Yu Gothic UI Semibold",
+      "fontSize": 40,
+      "color": "#2F6DB5"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [
+          {
+            "show": true,
+            "fontSize": 18,
+            "bold": true,
+            "fontColor": {
+              "solid": {
+                "color": "#1F2933"
+              }
+            }
+          }
+        ],
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DDE3EA"
+              }
+            },
+            "radius": 8
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "padding": [
+          {
+            "top": 10,
+            "bottom": 10,
+            "left": 12,
+            "right": 12
+          }
+        ],
+        "legend": [
+          {
+            "fontSize": 13
+          }
+        ],
+        "categoryAxis": [
+          {
+            "fontSize": 13
+          }
+        ],
+        "valueAxis": [
+          {
+            "fontSize": 13
+          }
+        ],
+        "subTitle": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F3F5F8"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#E9EDF2"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    },
+    "clusteredColumnChart": {
+      "*": {
+        "labels": [
+          {
+            "show": true,
+            "fontSize": 14
+          }
+        ],
+        "valueAxis": [
+          {
+            "gridlineShow": false,
+            "fontSize": 13
+          }
+        ]
+      }
+    },
+    "clusteredBarChart": {
+      "*": {
+        "labels": [
+          {
+            "show": true,
+            "fontSize": 14,
+            "labelPrecision": 2
+          }
+        ],
+        "valueAxis": [
+          {
+            "gridlineShow": false,
+            "fontSize": 13
+          }
+        ]
+      }
+    },
+    "lineChart": {
+      "*": {
+        "legend": [
+          {
+            "show": true,
+            "position": "Top",
+            "fontSize": 13
+          }
+        ]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "total": [
+          {
+            "totals": false
+          }
+        ],
+        "grid": [
+          {
+            "rowPadding": 6
+          }
+        ],
+        "columnHeaders": [
+          {
+            "fontSize": 14,
+            "bold": true
+          }
+        ],
+        "values": [
+          {
+            "fontSize": 13
+          }
+        ]
+      }
+    },
+    "textbox": {
+      "*": {
+        "border": [
+          {
+            "show": false
+          }
+        ],
+        "background": [
+          {
+            "show": false
+          }
+        ]
+      }
+    }
+  }
+}
