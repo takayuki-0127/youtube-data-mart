@@ -62,6 +62,32 @@ Python（pandas・SQLAlchemy・pyodbc・statsmodels・scikit-learn）／SQL Serv
 | Shorts の公開7日間1位「They Are In for the Night」945回（初日354・37.5%） | ○ |
 | v_video_features：使える行 329・欠損が pandas の下見と一致 | ○ |
 
+## Power BI（youtube_data_mart.pbix・リポジトリには含めない）
+mart の10テーブルとビュー・回帰結果（mart.regression_ratios）を読み込み、リレーションはすべて多対1・単方向。dim_date を日付テーブルに設定し、キー列は非表示。メジャーは表示フォルダ（チャンネル／動画）に分けた。見た目は自作テーマ（powerbi/theme_youtube_mart.json）でそろえた。
+
+| ページ | 中身 |
+|---|---|
+| 1 全体の推移 | 日別の視聴回数と7日移動平均（DAX の DATESINPERIOD）、総視聴回数・登録者増減・動画数 |
+| 2 Shortsと長尺 | 種類別の1本あたり視聴回数と動画数（Live は3本だけなので参考値） |
+| 3 公開7日間の伸び | v_video_rank_first7 の種類別ランキング（初日の割合つき） |
+| 4 何が効いているか | 重回帰の倍率（全体／長尺）と95%信頼区間・p値。相関であって因果ではない |
+
+![全体の推移](images/pbi_page1_trend.png)
+![Shortsと長尺](images/pbi_page2_shorts_vs_long.png)
+![公開7日間の伸び](images/pbi_page3_first7.png)
+![何が効いているか](images/pbi_page4_drivers.png)
+
+### 行レベルセキュリティ（RLS）
+| ロール | 見える範囲 |
+|---|---|
+| Shorts担当 | content_type = "Shorts" |
+| 長尺担当 | content_type が "長尺" または "Live"（Live は3本だけなので長尺担当が持つ） |
+
+「ロールとして表示」で、それぞれ自分の担当分だけが出ることを確かめた。
+
+![Shorts担当で表示](images/rls_shorts.png)
+![長尺担当で表示](images/rls_longform.png)
+
 ## 分かったこと（重回帰・328本・目的変数は log(1＋1日あたりの視聴回数)・HC3）
 - 公開からの日数をそろえると、Shorts は長尺の約2.8倍、1日あたりに見られる（95%信頼区間 2.4〜3.3）→ Shorts は入口
 - 動画は公開直後がいちばん伸び、1日ごとに約1.6% ずつ落ちる
