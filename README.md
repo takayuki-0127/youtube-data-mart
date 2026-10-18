@@ -3,7 +3,7 @@
 YouTube Studio のエクスポート（CSV 7種）を、pandas → SQL Server（stg → mart）→ Power BI とつなぎ、最後に「動画の視聴回数に何が効いているか」を重回帰で確かめるポートフォリオです。
 
 ## 目的
-（あとで埋める）
+1本目（youtube-analytics-powerbi）は CSV を Power BI で直接読んでいた。2本目では、取り込み（pandas）→ 保管（SQL Server の stg）→ 分析用の形（mart のスタースキーマ）→ 可視化（Power BI）→ 要因分析（重回帰）を分け、**何度流しても同じ数字が出るデータの流れ**を作る。そのうえで「動画の視聴回数に何が効いているか」を数字で確かめる。
 
 ## データの流れ
 ```
@@ -33,7 +33,16 @@ YouTube Studio の CSV ─▶ pandas（src/load_stg.py）─▶ SQL Server stg �
 | mart.v_video_features | 重回帰用の動画単位の表 | JOIN |
 
 ## 使った技術
-（あとで埋める）
+Python（pandas・SQLAlchemy・pyodbc・statsmodels・scikit-learn）／SQL Server（CTE・再帰 CTE・ウィンドウ関数・代理キー）／Power BI（スタースキーマ・RLS）
+
+## 再現の手順
+1. `pip install -r requirements.txt`
+2. `.env.example` を `.env` にコピーし、接続文字列を自分の環境に合わせる（Windows 認証・ODBC Driver 17/18）
+3. SSMS で `sql/00_create_database.sql` → `sql/01_create_stg.sql` を実行
+4. `python src/load_stg.py`（CSV → stg。`data/raw/` に YouTube Studio のエクスポートを置く）
+5. `python src/run_sql.py sql/02_create_mart.sql sql/03_load_mart.sql sql/04_views.sql`（mart とビュー。確認クエリの結果も表示）
+6. `python notebooks/e_03_regression.py`・`notebooks/e_04_regression_check.py`（要因分析）
+- Windows では `run_load_stg.bat` → `run_mart.bat` → `run_regression_check.bat` をダブルクリックでも同じ
 
 ## フォルダ
 | フォルダ | 中身 |
@@ -53,7 +62,10 @@ YouTube Studio の CSV ─▶ pandas（src/load_stg.py）─▶ SQL Server stg �
 | Shorts の公開7日間1位「They Are In for the Night」945回（初日354・37.5%） | ○ |
 | v_video_features：使える行 329・欠損が pandas の下見と一致 | ○ |
 
-## 分かったこと
-- 同じ公開日数なら、Shorts は長尺の約7.5倍見られている（重回帰・329本・p<0.001）→ Shorts は入口
-- 長尺の視聴回数はクリック率（1ポイントで約1.22倍）と公開からの日数で決まり、土日・祝日の公開は関係ない
-- 詳しくは docs/2026-10-18_要因分析の結果.md（インプレッションを入れない理由・多重共線性の扱いも記載）
+## 分かったこと（重回帰・328本・目的変数は log(1＋1日あたりの視聴回数)・HC3）
+- 公開からの日数をそろえると、Shorts は長尺の約2.8倍、1日あたりに見られる（95%信頼区間 2.4〜3.3）→ Shorts は入口
+- 動画は公開直後がいちばん伸び、1日ごとに約1.6% ずつ落ちる
+- 長尺はクリック率（サムネイル）だけがはっきり効く（+1ポイントで1日あたり約1.07倍）。土日・祝日の公開や長さは関係ない
+- 5-fold CV の R² は 0.42 ± 0.09。相関であって因果ではない。詳しくは docs/2026-10-18_要因分析の結果.md
+
+![残差](images/regression_residuals.png)
