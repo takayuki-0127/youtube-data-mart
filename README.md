@@ -2,6 +2,8 @@
 
 YouTube Studio のエクスポート（CSV 7種）を、pandas → SQL Server（stg → mart）→ Power BI とつなぎ、最後に「動画の視聴回数に何が効いているか」を重回帰で確かめるポートフォリオです。
 
+更新日：2026-10-19（予測モデル・SHAP、Shorts→長尺の検証、BigQuery 版を追加）
+
 ## 目的
 1本目（youtube-analytics-powerbi）は CSV を Power BI で直接読んでいた。2本目では、取り込み（pandas）→ 保管（SQL Server の stg）→ 分析用の形（mart のスタースキーマ）→ 可視化（Power BI）→ 要因分析（重回帰）を分け、**何度流しても同じ数字が出るデータの流れ**を作る。そのうえで「動画の視聴回数に何が効いているか」を数字で確かめる。
 
@@ -101,6 +103,16 @@ mart の10テーブルとビュー・回帰結果（mart.regression_ratios）を
 長尺の日次視聴（全体 −「ショート フィード」−「関連のショート動画」経由で近似）を、Shorts の投稿本数（当日〜7日前）・曜日・トレンド・長尺の投稿本数で回帰した（86日、Newey–West ラグ7）。当日は1本あたり約 +15 回多いが、新しい Shorts 自身がブラウジング・検索経由で得た視聴の混入でほぼ説明でき、純粋な長尺（上位12本）では差がない。翌日〜7日後の合計は +10.8 回（95%CI −7.4〜+29.0）で、この期間では「Shorts が長尺を引っぱる」ははっきり見えない。期間が短く CI が広いので「効果がない」とも言えず、投稿日は自分で選んでいるため因果も言えない。詳細は [notebooks/e_05_shorts_to_longform.ipynb](notebooks/e_05_shorts_to_longform.ipynb)。
 
 ![Shorts の投稿本数と長尺の日次視聴（ラグ別の係数）](images/shorts_lag_effect.png)
+
+### 公開時点の情報で再生数を予測する（LightGBM・時系列 CV・SHAP）
+
+公開前にわかる情報だけ（種類・長さ・曜日・直前の投稿からの日数・同じ日の投稿本数・タイトルの文字数／絵文字／#shorts・開始からの日数）で、log(1＋公開後の再生数) を予測した（公開から7日以上たった299本。Shorts は累計の99%以上が7日以内に来るので≒7日の再生数、長尺は累計）。公開日順の TimeSeriesSplit（5分割）で、RMSE は中央値 1.47・重回帰 1.27・LightGBM 1.29。予測に効くのは種類と長さ（Shorts・短い動画ほど多い）と時期で、SHAP の向きは重回帰の係数とほぼ一致した（Shorts／#shorts／長さは同じ情報を分け合うため重回帰の符号は不安定）。Shorts だけではどのモデルも中央値に勝てず、Shorts 同士の差は公開前の情報では説明できない。→ 曜日やタイトルの調整に時間をかけるより、公開後24時間の初速を見て伸びた型に寄せる。詳細は [notebooks/e_06_predict_views.ipynb](notebooks/e_06_predict_views.ipynb)。
+
+![時系列 CV の RMSE と、実際と予測](images/e06_cv.png)
+![SHAP](images/e06_shap.png)
+
+### BigQuery でも同じことができる
+7日移動平均・前週同曜日のビュー（`mart.v_channel_ma7`）を BigQuery サンドボックスに移し、SQL Server 版と同じ値（合計 36,577・10/14 の移動平均 602.29）になることを確かめた → [extras/bigquery](extras/bigquery)
 
 ## SQL の練習問題
 - [SQL 面接用の5問](docs/SQL面接用の5問.md)：gaps and islands（連続して伸びた日数）・前週比の上位・パレート（上位20%の占有率）・種類別の中央値（PERCENTILE_CONT）・ROW_NUMBER での重複除去
