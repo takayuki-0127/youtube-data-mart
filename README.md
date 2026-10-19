@@ -96,5 +96,11 @@ mart の10テーブルとビュー・回帰結果（mart.regression_ratios）を
 
 ![残差](images/regression_residuals.png)
 
+### Shorts を出すと長尺の視聴は増えるか（日次・分布ラグ回帰・HAC）
+
+長尺の日次視聴（全体 −「ショート フィード」−「関連のショート動画」経由で近似）を、Shorts の投稿本数（当日〜7日前）・曜日・トレンド・長尺の投稿本数で回帰した（86日、Newey–West ラグ7）。当日は1本あたり約 +15 回多いが、新しい Shorts 自身がブラウジング・検索経由で得た視聴の混入でほぼ説明でき、純粋な長尺（上位12本）では差がない。翌日〜7日後の合計は +10.8 回（95%CI −7.4〜+29.0）で、この期間では「Shorts が長尺を引っぱる」ははっきり見えない。期間が短く CI が広いので「効果がない」とも言えず、投稿日は自分で選んでいるため因果も言えない。詳細は [notebooks/e_05_shorts_to_longform.ipynb](notebooks/e_05_shorts_to_longform.ipynb)。
+
+![Shorts の投稿本数と長尺の日次視聴（ラグ別の係数）](images/shorts_lag_effect.png)
+
 ## SQL の練習問題
 - [SQL 面接用の5問](docs/SQL面接用の5問.md)：gaps and islands（連続して伸びた日数）・前週比の上位・パレート（上位20%の占有率）・種類別の中央値（PERCENTILE_CONT）・ROW_NUMBER での重複除去
