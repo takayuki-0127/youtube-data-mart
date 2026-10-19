@@ -95,3 +95,6 @@ mart の10テーブルとビュー・回帰結果（mart.regression_ratios）を
 - 5-fold CV の R² は 0.42 ± 0.09。相関であって因果ではない。詳しくは docs/2026-10-18_要因分析の結果.md
 
 ![残差](images/regression_residuals.png)
+
+## SQL の練習問題
+- [SQL 面接用の5問](docs/SQL面接用の5問.md)：gaps and islands（連続して伸びた日数）・前週比の上位・パレート（上位20%の占有率）・種類別の中央値（PERCENTILE_CONT）・ROW_NUMBER での重複除去
