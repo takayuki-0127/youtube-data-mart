@@ -1,10 +1,23 @@
 # youtube-data-mart
 
+**Summary (English)**
+- **Goal:** Analyze my own YouTube channel (93 days, 342 videos, Jul–Oct 2026) to see what views are associated with, using a data pipeline that gives the same numbers every time it runs.
+- **Data flow:** YouTube Studio CSV → pandas → SQL Server staging → star-schema data mart (CTEs, window functions, surrogate keys) → Power BI (DAX, row-level security) → regression and prediction in Python.
+- **Tools:** Python (pandas, statsmodels, scikit-learn, LightGBM, SHAP), SQL Server, Power BI; the 7-day moving-average view was also reproduced in BigQuery with matching results.
+- **Findings (associations, not causal effects):** after adjusting for days since publishing, Shorts get about 2.8x the daily views of long-form videos (95% CI 2.4–3.3); for long-form videos, higher thumbnail click-through rate goes with more views.
+- **Prediction:** with only information known at publish time, time-series cross-validated RMSE was 1.27 (OLS) and 1.29 (LightGBM) vs 1.47 for a median baseline; type and length drive most of the prediction.
+- **Try it without SQL Server:** `python src/try_sample.py` runs on the small sample in `data/sample/`.
+
 - **何を**：自分の YouTube チャンネル（2026年7〜10月の93日・342本）のデータを、pandas → SQL Server のデータマート → Power BI と整え、再生数が何と関連しているかを回帰と予測モデルで調べた。
 - **なぜ**：CSV を直接 Power BI で読むだけでは、数字が正しいか確かめにくい。取り込み・保管・分析を分けて、何度流しても同じ数字が出る形にしたうえで分析したかった。
 - **何がわかったか**：公開からの日数をそろえると、Shorts は長尺の約2.8倍見られている（関連）。長尺ではクリック率の高さと視聴回数に関連がある。Shorts を出した翌週に長尺の視聴が増えるという関連は、この期間でははっきり見えなかった。
 
-更新日：2026-10-19（予測モデル・SHAP、Shorts→長尺の検証、BigQuery 版を追加）
+
+![何と関連しているか（重回帰の倍率と95%信頼区間）](images/pbi_page4_drivers.png)
+
+この図からわかること：1を上回る区間になっているのは Shorts（全体、2.4〜3.3倍）とクリック率（長尺、1.03〜1.12倍）だけ。詳しくは下の「分かったこと」。
+
+更新日：2026-10-19（予測モデル・SHAP、Shorts→長尺の検証、BigQuery 版を追加）／2026-10-20：英語の要約・代表の図・サンプルデータを追加
 
 ## 目的
 1本目（youtube-analytics-powerbi）は CSV を Power BI で直接読んでいた。2本目では、取り込み（pandas）→ 保管（SQL Server の stg）→ 分析用の形（mart のスタースキーマ）→ 可視化（Power BI）→ 要因分析（重回帰）を分け、**何度流しても同じ数字が出るデータの流れ**を作る。そのうえで「動画の視聴回数が何と関連しているか」を数字で確かめる。
@@ -38,6 +51,13 @@ YouTube Studio の CSV ─▶ pandas（src/load_stg.py）─▶ SQL Server stg �
 
 ## 使った技術
 Python（pandas・SQLAlchemy・pyodbc・statsmodels・scikit-learn）／SQL Server（CTE・再帰 CTE・ウィンドウ関数・代理キー）／Power BI（スタースキーマ・RLS）
+
+## サンプルで試す（SQL Server なし・3行）
+元の CSV は入れていないので、集計済みの小さいサンプル（`data/sample/`：日別の視聴回数93日分と、動画40本の種類・長さ・視聴回数）で動きを確かめられる。
+1. `pip install pandas`
+2. リポジトリのいちばん上のフォルダで `python src/try_sample.py`
+3. 10/14 の7日移動平均 602.29（mart.v_channel_ma7 と同じ値）と、種類ごとの視聴回数の中央値が表示される
+- 重回帰・予測モデル（notebooks/）は全342本の CSV（data/raw/）が要るので、サンプルだけでは動かない
 
 ## 再現の手順
 1. `pip install -r requirements.txt`
