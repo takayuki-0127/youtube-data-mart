@@ -5,3 +5,5 @@ python-dotenv
 statsmodels
 scikit-learn
 matplotlib
+lightgbm
+shap

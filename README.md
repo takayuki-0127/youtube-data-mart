@@ -86,6 +86,12 @@ Python（pandas・SQLAlchemy・pyodbc・statsmodels・scikit-learn）／SQL Serv
 | Shorts の公開7日間1位「They Are In for the Night」945回（初日354・37.5%） | ○ |
 | v_video_features：使える行 329・欠損が pandas の下見と一致 | ○ |
 
+## データ品質のチェック
+`sql/06_data_quality_checks.sql` を mart を作った後に流すと、43項目の合格／不合格が一覧で出る（`python src/run_sql.py sql/06_data_quality_checks.sql` でも可）。
+- 見ること：① stg と mart の行数の一致 ② 主キーの重複 ③ NULL の割合（キーと日別の数値は0%、動画の CSV は5%まで）④ 日付の欠け（日付テーブルが切れ目なくそろうか、日別×区分の行がそろうか）⑤ 合計値の一致（stg と mart、日別と登録元別）
+- 結果（2026-10-20、同じロジックを手元の CSV と DuckDB で再現）：合格42・不合格0・注意1。注意は daily_metrics に行がない2日（7/14・7/16）で、mart では0で埋めている
+- わざと mart の1日分を消すと、行数と合計のチェックが不合格になることも確かめた
+
 ## Power BI（youtube_data_mart.pbix・リポジトリには含めない）
 mart の10テーブルとビュー・回帰結果（mart.regression_ratios）を読み込み、リレーションはすべて多対1・単方向。dim_date を日付テーブルに設定し、キー列は非表示。メジャーは表示フォルダ（チャンネル／動画）に分けた。見た目は自作テーマ（powerbi/theme_youtube_mart.json）でそろえた。
 
