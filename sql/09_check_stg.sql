@@ -1,4 +1,4 @@
--- 02_check_stg.sql：取り込んだ件数と合計が CSV と一致するか確認する
+-- 09_check_stg.sql：取り込んだ件数と合計が CSV と一致するか確認する
 -- 期待値（CSV 側）は src/load_stg.py の実行ログに出る
 USE youtube_data_mart;
 GO
