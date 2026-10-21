@@ -24,18 +24,14 @@ select
     lag(views, 7) over (order by date) as views_same_day_last_week
 from youtube_dbt.stg_channel_daily;
 
--- tests/assert_matches_sql_server.sql と同じ答え合わせ（0行なら合格）
+-- tests/assert_matches_sql_server.sql と同じ答え合わせ（ok がすべて true なら合格。2026-10-21 実行：4項目とも true）
 with checks as (
     select 'total_views' as item, cast(sum(views) as FLOAT64) as actual, 36577.0 as expected from youtube_dbt.v_channel_ma7
     union all
-    select 'ma7_1014', max(case when date = cast('2026-10-14' as date) then views_ma7 end), 602.29 from youtube_dbt.v_channel_ma7
+    select 'ma7_1014', max(case when date = DATE '2026-10-14' then views_ma7 end), 602.29 from youtube_dbt.v_channel_ma7
     union all
-    select 'ma7_1013', max(case when date = cast('2026-10-13' as date) then views_ma7 end), 631.71 from youtube_dbt.v_channel_ma7
+    select 'ma7_1013', max(case when date = DATE '2026-10-13' then views_ma7 end), 631.71 from youtube_dbt.v_channel_ma7
     union all
     select 'n_days', cast(count(*) as FLOAT64), 93.0 from youtube_dbt.v_channel_ma7
 )
-select 'NG' as result, * from checks
-where actual is null or abs(actual - expected) > 0.005
-union all
-select 'OK（4項目すべて一致）', 'all', null, null from (select 1) where not exists (
-  select 1 from checks where actual is null or abs(actual - expected) > 0.005);
+select item, actual, expected, abs(actual - expected) <= 0.005 as ok from checks;

@@ -20,7 +20,9 @@ bigquery_check.sql                      dbt が BigQuery 向けに生成した S
 | 実行先 | やったこと | 結果 |
 |---|---|---|
 | DuckDB（手元） | `dbt build --target local`（seed 1・view 2・テスト 8） | **PASS=11 ERROR=0**。10/14 の7日移動平均 602.29、10/13 は 631.71、合計 36,577 で SQL Server 版と一致 |
-| BigQuery | `dbt compile --target bq` で BigQuery 向けの SQL を生成（曜日は `FORMAT_DATE('%a', date)` に切り替わる）→ `bigquery_check.sql` | （下の「BigQuery で確かめる」を参照） |
+| BigQuery サンドボックス | `dbt compile --target bq` で BigQuery 向けの SQL を生成（曜日は `FORMAT_DATE('%a', date)` に切り替わる）→ `bigquery_check.sql` をコンソールで実行 | **5文すべて成功**。データセット `youtube_dbt` にテーブル1・ビュー2。答え合わせ4項目（合計 36,577／10/14 = 602.29／10/13 = 631.71／93日）がすべて true |
+
+`dbt build --target bq`（dbt から直接 BigQuery に流す）は、自分の PC で Google の認証をしてから行う（手順は下の「動かし方」）。
 
 ## SQL Server・BigQuery・dbt で変わったところ
 | | SQL Server（sql/04_views.sql） | BigQuery（extras/bigquery） | dbt（ここ） |
