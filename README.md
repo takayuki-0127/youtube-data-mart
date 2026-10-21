@@ -6,10 +6,12 @@
 - **Tools:** Python (pandas, statsmodels, scikit-learn, LightGBM, SHAP), SQL Server, Power BI; the 7-day moving-average view was also reproduced in BigQuery with matching results.
 - **Findings (associations, not causal effects):** after adjusting for days since publishing, Shorts get about 2.8x the daily views of long-form videos (95% CI 2.4–3.3); for long-form videos, higher thumbnail click-through rate goes with more views.
 - **Prediction:** with only information known at publish time, time-series cross-validated RMSE was 1.27 (OLS) and 1.29 (LightGBM) vs 1.47 for a median baseline; type and length drive most of the prediction.
+- **Live app:** the LightGBM model as a Streamlit app (inputs → prediction + SHAP waterfall): https://takayuki-youtube-views.streamlit.app/
 - **Try it without SQL Server:** `python src/try_sample.py` runs on the small sample in `data/sample/`.
 
 - **何を**：自分の YouTube チャンネル（2026年7〜10月の93日・342本）のデータを、pandas → SQL Server のデータマート → Power BI と整え、再生数が何と関連しているかを回帰と予測モデルで調べた。
 - **なぜ**：CSV を直接 Power BI で読むだけでは、数字が正しいか確かめにくい。取り込み・保管・分析を分けて、何度流しても同じ数字が出る形にしたうえで分析したかった。
+- **予測アプリ（公開中）**：公開前の条件を入れると、予測と SHAP の図が出る Streamlit アプリ → https://takayuki-youtube-views.streamlit.app/（コード：https://github.com/takayuki-0127/youtube-views-predictor）
 - **何がわかったか**：公開からの日数をそろえると、Shorts は長尺の約2.8倍見られている（関連）。長尺ではクリック率の高さと視聴回数に関連がある。Shorts を出した翌週に長尺の視聴が増えるという関連は、この期間でははっきり見えなかった。
 
 
