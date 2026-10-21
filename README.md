@@ -181,5 +181,7 @@ mart の10テーブルとビュー・回帰結果（mart.regression_ratios）を
 ### BigQuery でも同じことができる
 7日移動平均・前週同曜日のビュー（`mart.v_channel_ma7`）を BigQuery サンドボックスに移し、SQL Server 版と同じ値（合計 36,577・10/14 の移動平均 602.29）になることを確かめた → [extras/bigquery](extras/bigquery)
 
+同じビューを **dbt** でも書き直した（staging → mart の2モデル、曜日の関数は接続先に合わせてマクロで切り替え、答え合わせはテストとして `dbt build` のたびに自動実行）。DuckDB で `dbt build` が全件 PASS、BigQuery 向けに生成した SQL もサンドボックスで同じ値になった → [extras/dbt](extras/dbt)
+
 ## SQL の練習問題
 - [SQL 面接用の5問](docs/SQL面接用の5問.md)：gaps and islands（連続して伸びた日数）・前週比の上位・パレート（上位20%の占有率）・種類別の中央値（PERCENTILE_CONT）・ROW_NUMBER での重複除去
