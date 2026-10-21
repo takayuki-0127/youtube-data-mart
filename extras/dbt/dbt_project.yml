@@ -1,0 +1,23 @@
+name: youtube_dbt
+version: "1.0.0"
+config-version: 2
+profile: youtube_dbt
+
+seed-paths: ["seeds"]
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+
+seeds:
+  youtube_dbt:
+    channel_daily:
+      +column_types:
+        date: date
+        views: "{{ 'int64' if target.type == 'bigquery' else 'integer' }}"
+
+models:
+  youtube_dbt:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: view

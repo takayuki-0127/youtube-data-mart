@@ -1,0 +1,15 @@
+# ~/.dbt/profiles.yml にコピーして使う（このファイルに鍵やパスワードは書かない）
+youtube_dbt:
+  target: bq
+  outputs:
+    bq:                      # BigQuery サンドボックス
+      type: bigquery
+      method: oauth          # 事前に gcloud auth application-default login（自分のブラウザで許可）
+      project: YOUR_GCP_PROJECT_ID
+      dataset: youtube_dbt   # dbt が作るデータセット（extras/bigquery の youtube_mart とは分ける）
+      location: US
+      threads: 2
+    local:                   # 手元で試す用（DuckDB。ファイル1つで動く）
+      type: duckdb
+      path: youtube_dbt.duckdb
+      threads: 2
