@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_channel_daily
+    description: 日別の視聴回数（2026-07-14〜10-14、93日）
+    columns:
+      - name: date
+        data_tests: [not_null, unique]
+      - name: views
+        data_tests: [not_null]
+
+  - name: v_channel_ma7
+    description: 7日移動平均と前週同曜日の値（SQL Server 版・BigQuery 版と同じ定義）
+    columns:
+      - name: date
+        data_tests: [not_null, unique]
+      - name: views_ma7
+        data_tests: [not_null]
+      - name: days_in_window
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7]
+                quote: false
