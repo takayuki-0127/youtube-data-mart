@@ -1,5 +1,9 @@
 # youtube-data-mart
 
+- **何を**：自分の YouTube チャンネル（2026年7〜10月・93日・342本）の視聴回数が、何と関連しているかを調べた
+- **どう**：YouTube Studio の CSV → pandas → SQL Server（stg → mart のスタースキーマ）→ Power BI（DAX・RLS）→ 重回帰と LightGBM。同じビューを BigQuery と dbt でも再現し、値の一致を確かめた
+- **結果**：公開からの日数をそろえると、Shorts は長尺の約2.8倍見られている（95%CI 2.4〜3.3、関連であって因果ではない）。公開前の情報だけの予測は、中央値で当てるより誤差が約12〜14%小さい（LightGBM・重回帰）
+
 **Summary (English)**
 - **Goal:** Analyze my own YouTube channel (93 days, 342 videos, Jul–Oct 2026) to see what views are associated with, using a data pipeline that gives the same numbers every time it runs.
 - **Data flow:** YouTube Studio CSV → pandas → SQL Server staging → star-schema data mart (CTEs, window functions, surrogate keys) → Power BI (DAX, row-level security) → regression and prediction in Python.
